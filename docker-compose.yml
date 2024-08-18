@@ -1,0 +1,16 @@
+version: '4.0'
+
+services:
+  api-brecho:
+    image: bitnami/postgresql
+    container_name: databasebrecho
+    restart: always
+    environment:
+      POSTGRESQL_DATABASE: 'brecho'   
+      POSTGRESQL_USER: 'docker'
+      POSTGRESQL_PASSWORD: 'docker@'      
+      POSTGRESQL_POSTGRES_PASSWORD: 'docker@'
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./data/postgresql:/bitnami/postgresql

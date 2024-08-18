@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @default(uuid())
+  name String
+  email String @unique
+  password_hash String
+  created_at DateTime @default(now())
+
+  @@map("users")
+}
+
+// Este aqui precisa ser melhor elaborado no futuro, compras podem ser atreladas a um cliente
+model Clients {
+  id String @id @default(uuid())
+  name String
+
+  @@map("clients")
+}
+
+model Product {
+  id String @id @default(uuid())
+  description String @db.VarChar(150)
+  price Decimal
+  cost Decimal
+  stock Int? @default(0)
+  stock_type StockType
+  created_at DateTime @default(now())
+  updated_at DateTime? @default(now())
+  Sales Sales[]
+}
+
+model Sales {
+  id String @id @default(uuid())
+  sale_id BigInt
+  product_id String
+  transaction_date DateTime @default(now())
+  client_id String?
+  bag_id String? // Aqui bag_id vai ter relacionamento de um para um com cliente
+
+  product Product @relation(fields: [product_id], references: [id])
+}
+
+
+enum StockType {
+  single
+  multiple
+}
