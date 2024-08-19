@@ -1,6 +1,6 @@
-import { Prisma, Product } from '@prisma/client'
-import { IProductRepository } from '../i-products-repositories'
-import { ProductUpdateInput } from '../i-users-repositories'
+import { Prisma } from '@prisma/client'
+import { IProductRepository } from '../i-products-repository'
+import { ProductUpdateInput } from '../i-users-repository'
 import { prisma } from '@/lib/prisma'
 
 export class PrismaProductRepository implements IProductRepository {
@@ -23,8 +23,33 @@ export class PrismaProductRepository implements IProductRepository {
     throw new Error('Method not implemented.')
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async findProduct(id: string): Promise<Product | null> {
-    throw new Error('Method not implemented.')
+  async findProduct(id: string) {
+    const product = await prisma.product.findFirst({
+      where: {
+        id,
+      },
+    })
+    return product
+  }
+
+  async findProductStockType(id: string) {
+    const product = await prisma.product.findFirst({
+      where: {
+        id,
+      },
+    })
+
+    return product?.stock_type || null
+  }
+
+  async updateToSold(id: string) {
+    await prisma.product.update({
+      where: {
+        id,
+      },
+      data: {
+        is_sold: true,
+      },
+    })
   }
 }

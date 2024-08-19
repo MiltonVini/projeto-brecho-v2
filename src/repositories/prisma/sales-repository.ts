@@ -1,4 +1,4 @@
-import { ISalesCreateInput, ISalesRepository } from '../i-sales'
+import { ISalesCreateInput, ISalesRepository } from '../i-sales-repository'
 import { prisma } from '@/lib/prisma'
 
 export class PrismaSalesRepository implements ISalesRepository {
