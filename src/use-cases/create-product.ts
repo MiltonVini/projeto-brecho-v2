@@ -1,4 +1,4 @@
-import { IProductRepository } from '@/repositories/i-products-repositories'
+import { IProductRepository } from '@/repositories/i-products-repository'
 import { Product, StockType } from '@prisma/client'
 
 interface ProductUseCaseRequest {
