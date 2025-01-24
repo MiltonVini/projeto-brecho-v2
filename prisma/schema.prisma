@@ -27,6 +27,7 @@ model User {
 model Clients {
   id String @id @default(uuid())
   name String
+  instagram_name String
   bag Bag[]
 
   @@map("clients")
@@ -63,7 +64,8 @@ model Bag {
   product_id String
   client_id String
   created_at DateTime @default(now())
-  deliverd_at DateTime?
+  is_delivered Boolean @default(false)
+  delivered_at DateTime?
 
   client Clients @relation(fields: [client_id], references: [id])
   product Product @relation(fields: [product_id], references: [id])

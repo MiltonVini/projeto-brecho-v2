@@ -1,0 +1,38 @@
+import { PrismaBagRepository } from '@/repositories/prisma/bag-repository'
+import { PrismaProductRepository } from '@/repositories/prisma/products-repository'
+import { CreateBagUseCase } from '@/use-cases/create-bag'
+import { ClientAreadyHaveActiveBag } from '@/use-cases/errors/client-already-have-active-bag'
+import { ProductNotSold } from '@/use-cases/errors/product-not-sold'
+import { FastifyReply, FastifyRequest } from 'fastify'
+import { z } from 'zod'
+
+export async function createBag(request: FastifyRequest, reply: FastifyReply) {
+  const createBagBodySchema = z.object({
+    client_id: z.string(),
+    product_list: z.array(z.string()),
+  })
+
+  const data = createBagBodySchema.parse(request.body)
+
+  try {
+    const bagRepository = new PrismaBagRepository()
+    const productRepository = new PrismaProductRepository()
+    const bagUsecase = new CreateBagUseCase(bagRepository, productRepository)
+
+    await bagUsecase.execute(data)
+  } catch (error) {
+    if (error instanceof ClientAreadyHaveActiveBag) {
+      return reply.status(409).send({
+        message: error.message,
+      })
+    }
+
+    if (error instanceof ProductNotSold) {
+      return reply.status(409).send({
+        message: error.message,
+      })
+    }
+  }
+
+  return reply.status(201).send()
+}

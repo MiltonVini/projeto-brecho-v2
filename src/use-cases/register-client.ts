@@ -16,6 +16,9 @@ export class RegisterClientUseCase {
       throw new ClientAlreadyExists()
     }
 
-    await this.clientRepository.create({ name: data.name })
+    await this.clientRepository.create({
+      name: data.name,
+      instagram_name: data.instagram_name,
+    })
   }
 }

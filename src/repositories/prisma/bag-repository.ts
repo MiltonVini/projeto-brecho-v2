@@ -20,6 +20,17 @@ export class PrismaBagRepository implements IBagRepository {
     return bag
   }
 
+  async findActiveBagById(id: string) {
+    const bag = await prisma.bag.findFirst({
+      where: {
+        client_id: id,
+        is_delivered: false,
+      },
+    })
+
+    return bag
+  }
+
   async getLastBagId() {
     const lastBag = await prisma.bag.findFirst({
       orderBy: {
@@ -28,5 +39,22 @@ export class PrismaBagRepository implements IBagRepository {
     })
 
     return lastBag?.bag_id || null
+  }
+
+  async update(data: IBagCreateInput) {
+    const bag = await prisma.bag.create({
+      data: {
+        bag_id: data.bag_id,
+        created_at: new Date(),
+        client: {
+          connect: { id: data.client_id },
+        },
+        product: {
+          connect: { id: data.product_id },
+        },
+      },
+    })
+
+    return bag
   }
 }

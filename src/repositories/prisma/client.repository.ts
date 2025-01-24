@@ -7,6 +7,7 @@ export class PrismaClientRepository implements IClientRepository {
     const client = await prisma.clients.create({
       data: {
         name: data.name,
+        instagram_name: data.instagram_name,
       },
     })
     return client
