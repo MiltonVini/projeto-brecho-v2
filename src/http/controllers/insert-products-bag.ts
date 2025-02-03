@@ -5,7 +5,7 @@ import { InsertProductsInBagUseCase } from '@/use-cases/insert-products-bag'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
-export async function insertProductsInBagUseCase(
+export async function insertProductsInBag(
   request: FastifyRequest,
   reply: FastifyReply,
 ) {

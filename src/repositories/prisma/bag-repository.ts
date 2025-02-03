@@ -1,8 +1,8 @@
 import { Bags } from '@prisma/client'
 import {
   IBagCreateInput,
+  IbagFindInput,
   IBagRepository,
-  IBagUpdateInput,
 } from '../i-bag-repository'
 import { prisma } from '@/lib/prisma'
 
@@ -31,16 +31,27 @@ export class PrismaBagRepository implements IBagRepository {
     return bag
   }
 
-  async update(data: IBagUpdateInput) {
+  async updateToDelivered(id: string) {
     const bag = await prisma.bags.update({
       where: {
-        id: data.bag_id,
+        id,
       },
       data: {
-        is_delivered: data.is_delivered,
+        is_delivered: true,
+        delivered_at: new Date(),
       },
     })
 
     return bag
+  }
+
+  async findAll(data: IbagFindInput) {
+    const bags = await prisma.bags.findMany({
+      where: {
+        is_delivered: data.is_delivered,
+      },
+    })
+
+    return bags
   }
 }
