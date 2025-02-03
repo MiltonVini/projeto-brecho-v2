@@ -11,6 +11,6 @@ export async function appRoutes(app: FastifyInstance) {
   app.post('/client', registerClient)
   app.post('/product', create)
   app.post('/sales', insertSales)
-  app.post('/create/bag', createBag)
-  app.post('/update/bag', insertProductsInBagUseCase)
+  app.post('/bag', createBag)
+  app.post('/bag/products', insertProductsInBagUseCase)
 }

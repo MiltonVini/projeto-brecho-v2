@@ -1,14 +1,16 @@
-import { Bag } from '@prisma/client'
+import { Bags } from '@prisma/client'
 
 export interface IBagCreateInput {
-  bag_id: number
   client_id: string
-  product_id: string
+}
+
+export interface IBagUpdateInput {
+  bag_id: string
+  is_delivered: boolean
 }
 
 export interface IBagRepository {
-  create(data: IBagCreateInput): Promise<Bag>
-  findActiveBagById(id: string): Promise<Bag | null>
-  getLastBagId(): Promise<number | null>
-  update(data: IBagCreateInput): Promise<Bag>
+  create(data: IBagCreateInput): Promise<Bags>
+  findActiveBagById(id: string): Promise<Bags | null>
+  update(data: IBagUpdateInput): Promise<Bags>
 }

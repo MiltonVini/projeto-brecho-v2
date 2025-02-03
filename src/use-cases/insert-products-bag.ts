@@ -1,4 +1,7 @@
+import { IBagProductsRepository } from '@/repositories/i-bag-products'
 import { IBagRepository } from '@/repositories/i-bag-repository'
+import { IProductRepository } from '@/repositories/i-products-repository'
+import { ProductNotSold } from './errors/product-not-sold'
 
 export interface inserProductsInBagRequest {
   client_id: string
@@ -6,8 +9,14 @@ export interface inserProductsInBagRequest {
 }
 
 export class InsertProductsInBagUseCase {
-  constructor(private bagRepository: IBagRepository) {
+  constructor(
+    private bagRepository: IBagRepository,
+    private bagProductsRepository: IBagProductsRepository,
+    private productRepository: IProductRepository,
+  ) {
     this.bagRepository = bagRepository
+    this.bagProductsRepository = bagProductsRepository
+    this.productRepository = productRepository
   }
 
   async execute(data: inserProductsInBagRequest) {
@@ -17,9 +26,14 @@ export class InsertProductsInBagUseCase {
 
     if (clientActiveBag) {
       for (const product of data.product_list) {
-        await this.bagRepository.create({
-          bag_id: clientActiveBag?.bag_id,
-          client_id: data.client_id,
+        const productInfo = await this.productRepository.findProduct(product)
+
+        if (productInfo?.is_sold === false) {
+          throw new ProductNotSold()
+        }
+
+        await this.bagProductsRepository.create({
+          bag_id: clientActiveBag?.id,
           product_id: product,
         })
       }

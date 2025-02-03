@@ -10,8 +10,8 @@ export async function insertSales(
 ) {
   const insertSalesBodySchema = z.object({
     product_list: z.array(z.string()),
-    client_id: z.string().optional(),
-    bag_id: z.string().optional(),
+    client_id: z.string(),
+    bag_id: z.string(),
   })
 
   const data = insertSalesBodySchema.parse(request.body)
